@@ -70,11 +70,28 @@
 ;;;###autoload
 (defun chatgpt-repl ()
   (interactive)
-  (let ((buffer (get-buffer chatgpt-buffer-name)))
-    (pop-to-buffer
-     (if (or buffer (not (derived-mode-p 'chatgpt-repl-mode)))
-	 (get-buffer-create (or buffer chatgpt-buffer-name))
-       (current-buffer)))
+  (let ((buffer (get-buffer-create chatgpt-buffer-name)))
+    (pop-to-buffer buffer)
     (chatgpt-repl-mode)))
+
+;;;###autoload
+(defun chatgpt-repl-send (string)
+  (interactive "s")
+  (let ((buffer (get-buffer chatgpt-buffer-name)))
+    (when (not buffer)
+      (call-interactively 'chatgpt-repl))
+    (with-current-buffer chatgpt-buffer-name
+      (goto-char (point-max))
+      (insert string)
+      (call-interactively 'chatgpt-repl-send-input))
+    (pop-to-buffer chatgpt-buffer-name)))
+
+;;;###autoload
+(defun chatgpt-translate-region ()
+  (interactive)
+  (when (not (region-active-p))
+    (user-error "no region active"))
+  (let ((s (buffer-substring-no-properties (region-beginning) (region-end))))
+    (chatgpt-repl-send (format "translate into english or chinese: %s" s))))
 
 (provide 'chatgpt-repl)
