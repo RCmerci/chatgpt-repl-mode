@@ -59,7 +59,7 @@
       (insert "set env: M-x set-env")
       (chatgpt-repl-insert-prompt))))
 
-
+;;;###autoload
 (defun chatgpt-repl ()
   (interactive)
   (let ((buffer (get-buffer chatgpt-buffer-name)))
