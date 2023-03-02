@@ -38,9 +38,17 @@
 	(comint-send-input)
 	(chatgpt-repl-rep input (current-buffer))))))
 
+(defun chatgpt-repl-move-beginning-of-line ()
+  (interactive)
+  (let ((pos (comint-line-beginning-position)))
+    (if (= (point) pos)
+        (call-interactively #'back-to-indentation)
+      (goto-char pos))))
+
 (defvar chatgpt-repl-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") #'chatgpt-repl-send-input)
+    (define-key map (kbd "C-a") #'chatgpt-repl-move-beginning-of-line)
     map))
 
 (define-derived-mode chatgpt-repl-mode comint-mode "chatgpt-repl"
