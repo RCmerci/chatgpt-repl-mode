@@ -3,7 +3,7 @@
 
 (require 'dash)
 
-(defvar chatgpt-bin (executable-find "chatgpt"))
+(defvar chatgpt-bin "chatgpt")
 (defvar chatgpt-buffer-name "*chatgpt-repl*")
 (defvar chatgpt-err-buffer-name "*chatgpt-repl-err*")
 
