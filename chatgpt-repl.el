@@ -17,7 +17,9 @@
 		:stderr (get-buffer-create chatgpt-err-buffer-name)
 		:filter (lambda (proc string)
 			  (with-current-buffer buffer
-			    (insert string)))
+			    (save-excursion
+			      (goto-char (point-max))
+			      (insert string))))
 		:sentinel (lambda (proc event)
 			    (when (not (process-live-p proc))
 			      (with-current-buffer buffer
@@ -49,6 +51,7 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") #'chatgpt-repl-send-input)
     (define-key map (kbd "C-a") #'chatgpt-repl-move-beginning-of-line)
+    (define-key map (kbd "C-k") #'kill-line)
     map))
 
 (define-derived-mode chatgpt-repl-mode comint-mode "chatgpt-repl"
@@ -81,8 +84,9 @@
     (when (not buffer)
       (call-interactively 'chatgpt-repl))
     (with-current-buffer chatgpt-buffer-name
-      (goto-char (point-max))
-      (insert string)
+      (save-excursion
+	(goto-char (point-max))
+	(insert string))
       (call-interactively 'chatgpt-repl-send-input))
     (pop-to-buffer chatgpt-buffer-name)))
 
