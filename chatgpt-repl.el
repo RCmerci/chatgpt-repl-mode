@@ -8,8 +8,10 @@
 (defvar chatgpt-err-buffer-name "*chatgpt-repl-err*")
 
 (defun chatgpt-repl-insert-prompt ()
-  (insert "\n> ")
-  (comint-set-process-mark))
+  (save-excursion
+    (goto-char (point-max))
+    (insert "\n> ")
+    (comint-set-process-mark)))
 
 (defun chatgpt-bin-eval (input buffer)
   (make-process :name "chatgpt-repl-bin"
